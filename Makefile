@@ -9,14 +9,14 @@
 
 CXX = c++
 CXXFLAGS = -pthread -std=c++0x -march=native
-OBJS = args.o dictionary.o productquantizer.o matrix.o qmatrix.o vector.o model.o utils.o fasttext.o
+OBJS = args.o dictionary.o productquantizer.o matrix.o qmatrix.o vector.o model.o utils.o fasttext.o  dictionary_seq.o fastseq.o
 INCLUDES = -I.
 
 opt: CXXFLAGS += -O3 -funroll-loops
-opt: fasttext
+opt: fasttext fastseq
 
 debug: CXXFLAGS += -g -O0 -fno-inline
-debug: fasttext
+debug: fasttext fastseq
 
 args.o: src/args.cc src/args.h
 	$(CXX) $(CXXFLAGS) -c src/args.cc
@@ -48,5 +48,14 @@ fasttext.o: src/fasttext.cc src/*.h
 fasttext: $(OBJS) src/fasttext.cc
 	$(CXX) $(CXXFLAGS) $(OBJS) src/main.cc -o fasttext
 
+dictionary_seq.o: src/dictionary_seq.cc src/dictionary_seq.h src/args.h
+	$(CXX) $(CXXFLAGS) -c src/dictionary_seq.cc
+	
+fastseq.o: src/fastseq.cc src/*.h
+	$(CXX) $(CXXFLAGS) -c src/fastseq.cc
+	
+fastseq: $(OBJS) src/fastseq.cc src/main_fastseq.cc
+	$(CXX) $(CXXFLAGS) $(OBJS) src/main_fastseq.cc -o fastseq
+	
 clean:
 	rm -rf *.o fasttext

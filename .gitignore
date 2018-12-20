@@ -5,3 +5,5 @@
 data
 fasttext
 result
+/build/
+fastseq

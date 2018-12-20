@@ -8,3 +8,4 @@ result
 /build/
 fastseq
 .settings
+*.pyc

@@ -15,7 +15,7 @@ INCLUDES = -I.
 opt: CXXFLAGS += -O3 -funroll-loops
 opt: fasttext fastseq
 
-debug: CXXFLAGS += -g -O0 -fno-inline
+debug: CXXFLAGS += -g -O0 -ggdb -fno-inline
 debug: fasttext fastseq
 
 args.o: src/args.cc src/args.h

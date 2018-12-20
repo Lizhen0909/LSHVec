@@ -18,6 +18,11 @@
 #include <cmath>
 #include <stdexcept>
 
+#define ERROR(msg) \
+    fprintf(stderr, "Error: %s:%d: ", __FILE__, __LINE__); \
+    fprintf(stderr, "%s\n", msg); \
+	throw std::runtime_error(msg);
+
 namespace fasttext {
 
 const std::string DictionarySeq::EOS = "</s>";
@@ -81,10 +86,12 @@ const std::vector<int32_t>& DictionarySeq::getSubwords(int32_t i) const {
 
 const std::vector<int32_t> DictionarySeq::getSubwords(
     const std::string& word) const {
+
   int32_t i = getId(word);
   if (i >= 0) {
     return getSubwords(i);
   }
+  ERROR( (word+" is not in dictionary").c_str())
   std::vector<int32_t> ngrams;
   if (word != EOS) {
     computeSubwords(BOW + word + EOW, ngrams);
@@ -95,6 +102,7 @@ const std::vector<int32_t> DictionarySeq::getSubwords(
 void DictionarySeq::getSubwords(const std::string& word,
                            std::vector<int32_t>& ngrams,
                            std::vector<std::string>& substrings) const {
+	ERROR("useless")
   int32_t i = getId(word);
   ngrams.clear();
   substrings.clear();
@@ -140,43 +148,20 @@ std::string DictionarySeq::getWord(int32_t id) const {
   return words_[id].word;
 }
 
-// The correct implementation of fnv should be:
-// h = h ^ uint32_t(uint8_t(str[i]));
-// Unfortunately, earlier version of fasttext used
-// h = h ^ uint32_t(str[i]);
-// which is undefined behavior (as char can be signed or unsigned).
-// Since all fasttext models that were already released were trained
-// using signed char, we fixed the hash function to make models
-// compatible whatever compiler is used.
+
 uint32_t DictionarySeq::hash(const std::string& str) const {
-  uint32_t h = 2166136261;
-  for (size_t i = 0; i < str.size(); i++) {
-    h = h ^ uint32_t(int8_t(str[i]));
-    h = h * 16777619;
-  }
-  return h;
+  return atoi(str.c_str());
 }
 
 void DictionarySeq::computeSubwords(const std::string& word,
                                std::vector<int32_t>& ngrams,
                                std::vector<std::string>* substrings) const {
-  for (size_t i = 0; i < word.size(); i++) {
-    std::string ngram;
-    if ((word[i] & 0xC0) == 0x80) continue;
-    for (size_t j = i, n = 1; j < word.size() && n <= args_->maxn; n++) {
-      ngram.push_back(word[j++]);
-      while (j < word.size() && (word[j] & 0xC0) == 0x80) {
-        ngram.push_back(word[j++]);
-      }
-      if (n >= args_->minn && !(n == 1 && (i == 0 || j == word.size()))) {
-        int32_t h = hash(ngram) % args_->bucket;
-        pushHash(ngrams, h);
-        if (substrings) {
-          substrings->push_back(ngram);
-        }
-      }
+
+    int32_t h = hash(word) % args_->bucket;
+    pushHash(ngrams, h);
+    if (substrings) {
+      substrings->push_back(word);
     }
-  }
 }
 
 void DictionarySeq::initNgrams() {

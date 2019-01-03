@@ -157,6 +157,7 @@ void DictionarySeq::computeSubwords(const std::string& word,
                                std::vector<int32_t>& ngrams,
                                std::vector<std::string>* substrings) const {
 
+	if (args_->bucket==0) return;
     int32_t h = hash(word) % args_->bucket;
     pushHash(ngrams, h);
     if (substrings) {
@@ -166,7 +167,7 @@ void DictionarySeq::computeSubwords(const std::string& word,
 
 void DictionarySeq::initNgrams() {
   for (size_t i = 0; i < size_; i++) {
-    std::string word = BOW + words_[i].word + EOW;
+    std::string word =  words_[i].word ;
     words_[i].subwords.clear();
     words_[i].subwords.push_back(i);
     if (words_[i].word != EOS) {

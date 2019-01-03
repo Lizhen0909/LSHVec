@@ -10,6 +10,8 @@ import multiprocessing
 import csparc as kg 
 from joblib import Parallel, delayed
 from rand_proj import RandProj
+from tqdm import tqdm
+
 
 
 def gen_for_line_fnv(line, k):
@@ -26,7 +28,7 @@ def convert(in_file, out_file, hash_fun, kmer_size,n_thread, hash_size):
         lines = list(fp)
     
     if hash_fun == 'fnv':
-        sequences = Parallel(n_jobs=n_thread)(delayed(gen_for_line_fnv)(line,kmer_size ) for line in lines)
+        sequences = Parallel(n_jobs=n_thread)(delayed(gen_for_line_fnv)(line,kmer_size ) for line in tqdm(lines))
     else:
          rp = RandProj(kmer_size=kmer_size, hash_size=hash_size, n_thread=n_thread)
          rp.create_hash(lines)
@@ -49,7 +51,7 @@ def main(argv):
     hash_size=22
     n_thread = max(1,multiprocessing.cpu_count()-1)
     
-    help_msg = sys.argv[0] + ' -i <seq_file> --hash <fnv or lsh> -o <outfile> [--n_thread <n>] [--hash_size <m>]'
+    help_msg = sys.argv[0] + ' -i <seq_file> --hash <fnv or lsh> -o <outfile> [-k <kmer_size>] [--n_thread <n>] [--hash_size <m>]'
     if len(argv) < 2:
         print help_msg
         sys.exit(2) 

@@ -5,6 +5,8 @@ import numpy as np
 import re
 import csparc as kg 
 from joblib import Parallel, delayed
+from tqdm import tqdm
+
 
 ltc_q = {'A': complex(-1,0),'T': complex(1,0),'C': complex(0,-1),'G': complex(0,1)}
 
@@ -50,7 +52,7 @@ class RandProj(object):
     
     def create_hash(self,lines):
         kmers = self._sample_kmers(lines)
-        kmers = Parallel(n_jobs=self.n_thread)(delayed(seq_encoding)(u) for u in kmers)
+        kmers = Parallel(n_jobs=self.n_thread)(delayed(seq_encoding)(u) for u in tqdm(kmers))
         self._set_wheels(kmers,wheels=1)
         
     def _set_wheels(self,kmers, wheels=200):
@@ -90,7 +92,7 @@ class RandProj(object):
         return kmers 
     
     def hash_reads(self,reads):
-        hashed_reads = Parallel(n_jobs=self.n_thread)(delayed(hash_a_read)(self.Wheels, u, self.kmer_size) for u in reads)
+        hashed_reads = Parallel(n_jobs=self.n_thread)(delayed(hash_a_read)(self.Wheels, u, self.kmer_size) for u in tqdm(reads))
         return hash_reads
         
     def hash_read(self,read):

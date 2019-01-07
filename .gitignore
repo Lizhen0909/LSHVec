@@ -9,3 +9,6 @@ result
 fastseq
 .settings
 *.pyc
+.ipynb_checkpoints
+sandbox
+!scripts/fastseq

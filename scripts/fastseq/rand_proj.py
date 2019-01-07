@@ -1,12 +1,10 @@
-import os
-import gzip
-import sys, getopt
 import numpy as np 
-import re
 import csparc as kg 
 from joblib import Parallel, delayed
 from tqdm import tqdm
+import utils 
 
+logger = utils.get_logger("rand_proj")
 
 ltc_q = {'A': complex(-1,0),'T': complex(1,0),'C': complex(0,-1),'G': complex(0,1)}
 

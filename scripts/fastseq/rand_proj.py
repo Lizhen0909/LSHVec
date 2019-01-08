@@ -35,7 +35,7 @@ def coords_to_bins(Wheels, C,reverse_compliments=True):
 
 def hash_a_read(Wheels, read, kmer_size,reverse_compliments=True):
         C = []
-        for kmer in kg.generate_kmer(read, kmer_size):
+        for kmer in kg.generate_kmer_for_fastseq(read, kmer_size):
             C.append(seq_encoding(kmer))
         if len(C) > 0:
             return coords_to_bins(Wheels, C,reverse_compliments=reverse_compliments)

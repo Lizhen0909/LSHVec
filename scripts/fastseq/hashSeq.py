@@ -12,7 +12,7 @@ logger = utils.get_logger("hashSeq")
 
 def gen_for_line_fnv(line, k, bucket):
     seq = line.split("\t")[2].strip()
-    return [kg.fnv_hash(u) % bucket for u in kg.generate_kmer(seq, k)]
+    return [kg.fnv_hash(u) % bucket for u in kg.generate_kmer_for_fastseq(seq, k)]
 
 
 def gen_for_line_lsh(line, k, rp, bucket):

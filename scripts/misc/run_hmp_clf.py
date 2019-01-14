@@ -1,15 +1,38 @@
 #!/usr/bin/env python
  
 import sys, getopt
-import multiprocessing
-import csparc as kg 
-import os 
-from joblib import Parallel, delayed
-from rand_proj import RandProj
-from tqdm import tqdm
-import utils 
+import os , multiprocessing
+import logging
+import numpy as np 
+import pandas as pd 
 
-logger = utils.get_logger("run_hmp_clf")
+
+_LOGGERS = {}
+
+
+def get_logger(name):
+    if name not in _LOGGERS:
+        # create logger
+        logger = logging.getLogger(name)
+        logger.setLevel(logging.INFO)
+        
+        # create console handler and set level to debug
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.DEBUG)
+        
+        # create formatter
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        
+        # add formatter to ch
+        ch.setFormatter(formatter)
+        
+        # add ch to logger
+        logger.addHandler(ch)
+        _LOGGERS[name] = logger 
+    return _LOGGERS[name]
+
+logger = get_logger("run_hmp_clf")
+
 
 
 def create_dir_if_not_exists(directory):
@@ -18,18 +41,31 @@ def create_dir_if_not_exists(directory):
 
 
 def shell_run_and_wait(command, working_dir=None, env=None):
+    logger.info("running "+command)
     curr_dir = os.getcwd()
     if working_dir is not None:
         os.chdir(working_dir)
     command = command.split(" ")
     import subprocess
     
-    # process = subprocess.Popen(command, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     process = subprocess.Popen(command, env=env)
     process.wait()
     if working_dir is not None:
         os.chdir(curr_dir)
     return process.returncode
+
+def shell_run_and_wait2(command1, command2, working_dir=None, env=None):
+    logger.info("running {} | {}".format(command1,command2))
+    curr_dir = os.getcwd()
+    if working_dir is not None:
+        os.chdir(working_dir)
+    import subprocess
+    ps = subprocess.Popen( command1.split(" "), stdout=subprocess.PIPE)
+    output = subprocess.check_output(command2.split(" "), stdin=ps.stdout)
+    ps.wait()
+    if working_dir is not None:
+        os.chdir(curr_dir)
+    return ps.returncode
 
 
 def make_train_test(hashfile, labels, n):
@@ -86,10 +122,12 @@ def create_labels(seqfile, label_type):
 
 def copy_file(src, dest):
     if src.endswith('.zst'):
-        cmd = "cat {} | zstd -fo {}".format(src, dest)
+        cmd1 = "cat {}".format(src)
+        cmd2 = "zstd -dfo {}".format(dest)
+        status = shell_run_and_wait2(cmd1,cmd2)
     else:
         cmd = "cp {} {}".format(src, dest)
-    status = shell_run_and_wait(cmd)
+        status = shell_run_and_wait(cmd)
     assert status == 0                
 
                     
@@ -101,10 +139,11 @@ def run(in_file, hash_file, label_type, out_prefix, working_dir, wordNgrams, wor
     logger.info("use seq file: " + in_file)
     assert  os.path.exists(in_file)
 
-    hash_file = os.path.abspath(in_file)
+    hash_file = os.path.abspath(hash_file)
     logger.info("use seq file: " + hash_file)
     assert  os.path.exists(hash_file)
     
+    if os.path.exists(working_dir): logger.warn("working dir <{}> exists. will overide.".format(working_dir))
     create_dir_if_not_exists(working_dir)
     os.chdir(working_dir)
     logger.info("working dir: " + os.getcwd())
@@ -118,9 +157,8 @@ def run(in_file, hash_file, label_type, out_prefix, working_dir, wordNgrams, wor
     make_train_test('data.hash', labels, n=450000)
     logger.info("finish making train test")
     
-    cmd = "fastseq supervised -input data.train -output model -lr {} -epoch {} -wordNgrams {}  -dim {} -loss {}".format(
+    cmd = "fastseq supervised -input data.train -output model -lr {} -epoch {} -wordNgrams {} -dim {} -loss {}".format(
                      learning_rate, epoch, wordNgrams, word_dim, loss_fun)
-    logger.info("running " + cmd)
     status = shell_run_and_wait(cmd)
     logger.info("finish running train")
     assert status == 0
@@ -136,9 +174,9 @@ def run(in_file, hash_file, label_type, out_prefix, working_dir, wordNgrams, wor
 def main(argv):
     in_file = ''
     label_type = ""
-    loss_fun = ""
+    loss_fun = "hs"
     out_prefix = 'model'
-    hashfile = ''
+    hash_file = ''
     working_dir = "."
     learning_rate = 0.5
     epoch = 5
@@ -152,8 +190,9 @@ def main(argv):
         sys.exit(2) 
     else:
         try:
-            opts, args = getopt.getopt(argv, "hi:", ["in_file=", "lr=", "dim=", "n_thread=", "epoch=", 'wordNgrams=', 'loss=', 'working_dir='])
-        except getopt.GetoptError:
+            opts, args = getopt.getopt(argv, "hi:", ["in_file=", "lr=", "dim=", "n_thread=", "epoch=", 'wordNgrams=', 'loss=', 'working_dir=', 'hash=', 'label='])
+        except getopt.GetoptError as e:
+            print e
             print help_msg
             sys.exit(2)
         for opt, arg in opts:

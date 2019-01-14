@@ -157,8 +157,8 @@ def run(in_file, hash_file, label_type, out_prefix, working_dir, wordNgrams, wor
     make_train_test('data.hash', labels, n=450000)
     logger.info("finish making train test")
     
-    cmd = "fastseq supervised -input data.train -output model -lr {} -epoch {} -wordNgrams {} -dim {} -loss {}".format(
-                     learning_rate, epoch, wordNgrams, word_dim, loss_fun)
+    cmd = "fastseq supervised -input data.train -output model -lr {} -epoch {} -wordNgrams {} -dim {} -loss {} -thread {}".format(
+                     learning_rate, epoch, wordNgrams, word_dim, loss_fun, n_thread)
     status = shell_run_and_wait(cmd)
     logger.info("finish running train")
     assert status == 0

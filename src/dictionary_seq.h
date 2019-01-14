@@ -34,8 +34,8 @@ struct entry {
 
 class DictionarySeq {
   protected:
-    static const int32_t MAX_VOCAB_SIZE = 30000000;
-    static const int32_t MAX_LINE_SIZE = 1024;
+    static const int32_t MAX_VOCAB_SIZE = 300000000;
+    static const int32_t MAX_LINE_SIZE = 10240;
 
     int32_t find(const std::string&) const;
     int32_t find(const std::string&, uint32_t h) const;

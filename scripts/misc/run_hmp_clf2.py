@@ -118,7 +118,7 @@ def main(argv):
         sys.exit(2) 
     else:
         try:
-            opts, args = getopt.getopt(argv, "hi:", ["in_file=", "lr=", "dim=", "n_thread=", "epoch=", 'wordNgrams=', 'loss=', 'working_dir=', 'hash=', 'label='])
+            opts, args = getopt.getopt(argv, "hi:", ["in_file=", "test=", "lr=", "dim=", "n_thread=", "epoch=", 'wordNgrams=', 'loss=', 'working_dir=', 'hash=', 'label='])
         except getopt.GetoptError as e:
             print e
             print help_msg

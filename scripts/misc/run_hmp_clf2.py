@@ -74,11 +74,11 @@ def run(train_file, test_file, out_prefix, working_dir, wordNgrams, word_dim, le
 
     train_file = os.path.abspath(train_file)
     logger.info("use train file: " + train_file)
-    assert  os.path.exists(in_file)
+    assert  os.path.exists(train_file)
 
     test_file = os.path.abspath(test_file)
-    logger.info("use test file: " + hash_file)
-    assert  os.path.exists(hash_file)
+    logger.info("use test file: " + test_file)
+    assert  os.path.exists(test_file)
     
     if os.path.exists(working_dir): logger.warn("working dir <{}> exists. will overide.".format(working_dir))
     create_dir_if_not_exists(working_dir)

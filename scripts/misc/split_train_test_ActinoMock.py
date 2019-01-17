@@ -19,18 +19,18 @@ def make_train_test(hashfile, labels, n):
 
 def create_labels(seqfile, label_type):
     s = """
-2623620609    Micromonospora coxensis DSM 45161    Actinobacteria    Actinobacteria    Micromonosporales    Micromonosporaceae
-2623620557    Micromonospora echinaurantiaca DSM 43904    Actinobacteria    Actinobacteria    Micromonosporales    Micromonosporaceae
-2623620567    Micromonospora echinofusca DSM 43913    Actinobacteria    Actinobacteria    Micromonosporales    Micromonosporaceae
-2615840646    Propionibacteriaceae bacterium ES.041    Actinobacteria    Actinobacteria    Propionibacteriales    Propionibacteriaceae
-2615840527    Muricauda sp. ES.050    Bacteroidetes    Flavobacteriia    Flavobacteriales    Flavobacteriaceae
-2615840601    Cohaesibacter sp. ES.047    Proteobacteria    Alphaproteobacteria    Rhizobiales    Cohaesibacteraceae
-2615840533    Thioclava sp. ES.032    Proteobacteria    Alphaproteobacteria    Rhodobacterales    Rhodobacteraceae
-2623620617    Halomonas sp. HL-4    Proteobacteria    Gammaproteobacteria    Oceanospirillales    Halomonadaceae
-2623620618    Halomonas sp. HL-93    Proteobacteria    Gammaproteobacteria    Oceanospirillales    Halomonadaceae
-2616644829    Marinobacter sp. LV10MA510-1    Proteobacteria    Gammaproteobacteria    Alteromonadales    Alteromonadaceae
-2615840697    Marinobacter sp. LV10R510-8    Proteobacteria    Gammaproteobacteria    Alteromonadales    Alteromonadaceae
-2617270709    Psychrobacter sp. LV10R520-6    Proteobacteria    Gammaproteobacteria    Pseudomonadales    Moraxellaceae
+2623620609	Micromonospora coxensis DSM 45161	Actinobacteria	Actinobacteria	Micromonosporales	Micromonosporaceae
+2623620557	Micromonospora echinaurantiaca DSM 43904	Actinobacteria	Actinobacteria	Micromonosporales	Micromonosporaceae
+2623620567	Micromonospora echinofusca DSM 43913	Actinobacteria	Actinobacteria	Micromonosporales	Micromonosporaceae
+2615840646	Propionibacteriaceae bacterium ES.041	Actinobacteria	Actinobacteria	Propionibacteriales	Propionibacteriaceae
+2615840527	Muricauda sp. ES.050	Bacteroidetes	Flavobacteriia	Flavobacteriales	Flavobacteriaceae
+2615840601	Cohaesibacter sp. ES.047	Proteobacteria	Alphaproteobacteria	Rhizobiales	Cohaesibacteraceae
+2615840533	Thioclava sp. ES.032	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae
+2623620617	Halomonas sp. HL-4	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae
+2623620618	Halomonas sp. HL-93	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae
+2616644829	Marinobacter sp. LV10MA510-1	Proteobacteria	Gammaproteobacteria	Alteromonadales	Alteromonadaceae
+2615840697	Marinobacter sp. LV10R510-8	Proteobacteria	Gammaproteobacteria	Alteromonadales	Alteromonadaceae
+2617270709	Psychrobacter sp. LV10R520-6	Proteobacteria	Gammaproteobacteria	Pseudomonadales	Moraxellaceae
 """
     s = [u.strip() for u in s.split("\n") if u.strip()]
     s = [u.split("\t") for u in s]
@@ -41,17 +41,22 @@ def create_labels(seqfile, label_type):
     if label_type == 'org':
         labels = labels[1].map(lambda u: u.split("-")[1]).values
     else:
-        labels = labels[1].map(lambda u: u.split("-")[2]).values
+        labels = labels[1].map(lambda u: u.split("-")[1]).values
 
     if label_type == 'phylum':        
-        m = s.set_index(0)[3].to_dict()
+        m = s.set_index(0)[2].to_dict()
         labels = np.array([m[u] for u in labels])
     elif label_type == 'class':
-        m = s.set_index(0)[4].to_dict()
+        m = s.set_index(0)[3].to_dict()
         labels = np.array([m[u] for u in labels])
     elif label_type == 'order':
+        m = s.set_index(0)[4].to_dict()
+        labels = np.array([m[u] for u in labels])
+    elif label_type == 'family':
         m = s.set_index(0)[5].to_dict()
         labels = np.array([m[u] for u in labels])
+    elif label_type == 'org':
+	pass
     else:
         raise Exception("NA "+label_type)
     logger.info("Has {} labels".format(len(set(labels))))

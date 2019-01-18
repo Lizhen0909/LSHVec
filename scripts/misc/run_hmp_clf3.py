@@ -39,15 +39,18 @@ def create_dir_if_not_exists(directory):
         os.makedirs(directory)
 
 
-def shell_run_and_wait(command,stdout_file, working_dir=None, env=None):
+def shell_run_and_wait(command,stdout_file=None, working_dir=None, env=None):
     logger.info("running " + command)
     curr_dir = os.getcwd()
     if working_dir is not None:
         os.chdir(working_dir)
     command = command.split(" ")
     import subprocess
-    with open(stdout_file, 'w') as output_f:
-        process = subprocess.Popen(command, env=env, stdout=output_f)
+    if stdout_file is None:
+        process = subprocess.Popen(command, env=env)
+    else:
+        with open(stdout_file, 'w') as output_f:
+            process = subprocess.Popen(command, env=env, stdout=output_f)
     process.wait()
     if working_dir is not None:
         os.chdir(curr_dir)

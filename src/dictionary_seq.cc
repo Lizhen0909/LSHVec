@@ -422,7 +422,7 @@ void DictionarySeq::load(std::istream& in) {
   initTableDiscard();
   initNgrams();
 
-  int32_t word2intsize = std::ceil(size_ / 0.7);
+  int32_t word2intsize = MAX_VOCAB_SIZE;
   word2int_.assign(word2intsize, -1);
   for (int32_t i = 0; i < size_; i++) {
     word2int_[find(words_[i].word)] = i;

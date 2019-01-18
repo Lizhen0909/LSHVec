@@ -39,7 +39,7 @@ def create_dir_if_not_exists(directory):
         os.makedirs(directory)
 
 
-def shell_run_and_wait(command,stdout_file=None, working_dir=None, env=None):
+def shell_run_and_wait(command, stdout_file=None, working_dir=None, env=None):
     logger.info("running " + command)
     curr_dir = os.getcwd()
     if working_dir is not None:
@@ -94,8 +94,8 @@ def run(train_file, test_file, out_prefix, working_dir, wordNgrams, word_dim, le
     logger.info("finish running train")
     assert status == 0
     
-    cmd = "fastseq predict-prob model.bin {} 100 > data.test.predict".format(test_file) 
-    status = shell_run_and_wait(cmd)
+    cmd = "fastseq predict-prob model.bin {} 100".format(test_file) 
+    status = shell_run_and_wait(cmd, stdout_file='data.test.predict')
     logger.info("finish running test")
     assert status == 0
     

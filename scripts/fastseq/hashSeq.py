@@ -10,10 +10,18 @@ import utils
 
 logger = utils.get_logger("hashSeq")
 
+ONE_HOT_MAP={'A':'00','C':'01','G':'10','C':'11'}
+def one_hot_hash(kmer):
+    kmer= "".join([ONE_HOT_MAP[u] for u in kmer])
+    return int(kmer, 2)
+
 def gen_for_line_fnv(line, k, bucket):
     seq = line.split("\t")[2].strip()
     return [kg.fnv_hash(u) % bucket for u in kg.generate_kmer_for_fastseq(seq, k)]
 
+def gen_for_line_onehot(line, k):
+    seq = line.split("\t")[2].strip()
+    return [one_hot_hash(u) for u in kg.generate_kmer_for_fastseq(seq, k)]
 
 def gen_for_line_lsh(line, k, rp, bucket):
     seq = line.split("\t")[2].strip()
@@ -25,6 +33,8 @@ def convert(in_file, out_file, hash_fun, kmer_size, n_thread, hash_size, batch_s
     def f(lines,fout,rp=None):
         if hash_fun == 'fnv':
             sequences = Parallel(n_jobs=n_thread)(delayed(gen_for_line_fnv)(line, kmer_size, bucket) for line in tqdm(lines))
+        elif hash_fun == 'onehot':
+            sequences = Parallel(n_jobs=n_thread)(delayed(gen_for_line_onehot)(line, kmer_size) for line in tqdm(lines))
         else:
             sequences = Parallel(n_jobs=n_thread)(delayed(gen_for_line_lsh)(line, kmer_size, rp, bucket) for line in tqdm(lines))
         
@@ -108,7 +118,7 @@ def main(argv):
                 assert bucket > 0                                                 
             elif opt in ("-o", "--out_file"):
                 out_file = arg
-        if hash_fun not in ['fnv', 'lsh']:
+        if hash_fun not in ['fnv', 'lsh', 'onehot']:
             print help_msg 
             exit(3)  
     convert(in_file, out_file, hash_fun, kmer_size, n_thread=n_thread, hash_size=hash_size, batch_size=batch_size, bucket=bucket)

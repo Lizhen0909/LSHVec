@@ -10,7 +10,7 @@ import utils
 
 logger = utils.get_logger("hashSeq")
 
-ONE_HOT_MAP={'A':'00','C':'01','G':'10','C':'11'}
+ONE_HOT_MAP={'A':'00','C':'01','G':'10','T':'11'}
 def one_hot_hash(kmer):
     kmer= "".join([ONE_HOT_MAP[u] for u in kmer])
     return int(kmer, 2)

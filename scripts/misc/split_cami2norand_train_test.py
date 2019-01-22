@@ -26,22 +26,22 @@ print df.istest.mean()
 
 def create_labels(labels, label_type):
     s = """
-286	Pseudomonas	genus	Proteobacteria	Gammaproteobacteria	Pseudomonadales
-357	Agrobacterium	genus	Proteobacteria	Alphaproteobacteria	Rhizobiales
-475	Moraxella	genus	Proteobacteria	Gammaproteobacteria	Pseudomonadales
-481	Neisseriaceae	family	Proteobacteria	Betaproteobacteria	Neisseriales
-543	Enterobacteriaceae	family	Proteobacteria	Gammaproteobacteria	Enterobacterales
-570	Klebsiella	genus	Proteobacteria	Gammaproteobacteria	Enterobacterales
-1279	Staphylococcus	genus	Firmicutes	Bacilli	Bacillales
-1301	Streptococcus	genus	Firmicutes	Bacilli	Lactobacillales
-1386	Bacillus	genus	Firmicutes	Bacilli	Bacillales
-1653	Corynebacteriaceae	family	Actinobacteria	Actinobacteria	Actinobacteria
-1716	Corynebacterium	genus	Actinobacteria	Actinobacteria	Actinobacteria
-2070	Pseudonocardiaceae	family	Actinobacteria	Actinobacteria	Actinobacteria
-13687	Sphingomonas	genus	Proteobacteria	Alphaproteobacteria	Sphingomonadales
-41294	Bradyrhizobiaceae	family	Proteobacteria	Alphaproteobacteria	Rhizobiales
-80864	Comamonadaceae	family	Proteobacteria	Betaproteobacteria	Burkholderiales
-85031	Nakamurellaceae	family	Actinobacteria	Actinobacteria	Actinobacteria
+286	Pseudomonas	genus	Proteobacteria	Gammaproteobacteria	Pseudomonadales	Pseudomonadaceae
+357	Agrobacterium	genus	Proteobacteria	Alphaproteobacteria	Rhizobiales	Rhizobiaceae
+475	Moraxella	genus	Proteobacteria	Gammaproteobacteria	Pseudomonadales	Pseudomonadaceae
+481	Neisseriaceae	family	Proteobacteria	Betaproteobacteria	Neisseriales	Neisseriaceae
+543	Enterobacteriaceae	family	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae
+570	Klebsiella	genus	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae
+1279	Staphylococcus	genus	Firmicutes	Bacilli	Bacillales	Staphylococceae
+1301	Streptococcus	genus	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae
+1386	Bacillus	genus	Firmicutes	Bacilli	Bacillales	Bacillaceae
+1653	Corynebacteriaceae	family	Actinobacteria	Actinobacteria	Corynebacteriales	Corynebacteriaceae
+1716	Corynebacterium	genus	Actinobacteria	Actinobacteria	Corynebacteriales	Corynebacteriaceae
+2070	Pseudonocardiaceae	family	Actinobacteria	Actinobacteria	Pseudonocardiales	Pseudonocardiaceae
+13687	Sphingomonas	genus	Proteobacteria	Alphaproteobacteria	Sphingomonadales	Sphingomonadaceae
+41294	Bradyrhizobiaceae	family	Proteobacteria	Alphaproteobacteria	Rhizobiales	Bradyrhizobiaceae
+80864	Comamonadaceae	family	Proteobacteria	Betaproteobacteria	Burkholderiales	Comamonadaceae
+85031	Nakamurellaceae	family	Actinobacteria	Actinobacteria	Nakamurellales	Nakamurellaceae
 """
 
     s = [u.strip() for u in s.split("\n") if u.strip()]
@@ -60,6 +60,9 @@ def create_labels(labels, label_type):
     elif label_type == 'order':
         m = s.set_index(0)[5].to_dict()
         labels = np.array([m[u] for u in labels])
+    elif label_type == 'family':
+        m = s.set_index(0)[6].to_dict()
+        labels = np.array([m[u] for u in labels])
     elif label_type == 'tax':
         m = s.set_index(0)[1].to_dict()
         labels = np.array([m[u] for u in labels])
@@ -75,12 +78,15 @@ df['tax']=create_labels(df['taxid'],'tax')
 df['order']=create_labels(df['taxid'],'order')
 df['class']=create_labels(df['taxid'],'class')
 df['phylum']=create_labels(df['taxid'],'phylum')
+df['family']=create_labels(df['taxid'],'family')
 
 import os
-for target in ['tax','order','class','phylum']:
+#for target in ['tax','order','class','phylum']:
+for target in ['family']:
     os.mkdir(target)
     
-for target in ['tax','order','class','phylum']:    
+#for target in ['tax','order','class','phylum']:    
+for target in ['family']:
     print target
     labels = df[target].values
     istests=df['istest'].values

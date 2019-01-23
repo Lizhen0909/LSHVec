@@ -16,7 +16,14 @@ def make_train_test(hashfile, labels, n):
                 else:
                     ftest.write("__label__" + labels[i] + " " + line)
                     
-def create_labels(labels, label_type):
+def create_labels(seqfile, label_type):
+    labels = pd.read_csv(seqfile, usecols=[1], sep='\t', header=None)
+    if label_type == 'org':
+        labels = labels[1].map(lambda u: u.split("-")[1]).values
+    else:
+        labels = labels[1].map(lambda u: u.split("-")[2]).values
+
+
     s = """
 286	Pseudomonas	genus	Proteobacteria	Gammaproteobacteria	Pseudomonadales	Pseudomonadaceae
 357	Agrobacterium	genus	Proteobacteria	Alphaproteobacteria	Rhizobiales	Rhizobiaceae

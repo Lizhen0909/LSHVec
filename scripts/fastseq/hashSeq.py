@@ -83,7 +83,7 @@ def main(argv):
     bucket = 20000000
     n_thread = max(1, multiprocessing.cpu_count() - 1)
     
-    help_msg = sys.argv[0] + ' -i <seq_file> --hash <fnv or lsh> -o <outfile> [-k <kmer_size>] [--n_thread <n>] [--hash_size <m>] [--batch_size <n>] [--chunk <n>]'
+    help_msg = sys.argv[0] + ' -i <seq_file> --hash <fnv or lsh> -o <outfile> [-k <kmer_size>] [--n_thread <n>] [--hash_size <m>] [--batch_size <n>] [--bucket <n>]'
     if len(argv) < 2:
         print help_msg
         sys.exit(2) 

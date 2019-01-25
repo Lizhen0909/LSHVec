@@ -23,23 +23,25 @@ Here is the environment I worked on.  Other versions may also work. Python 3 sho
 
 ## Build 
 
-1. clone from git
+- clone from git
 
-   `git clone https://LizhenShi@bitbucket.org/LizhenShi/fastseq.git`
+  `git clone https://LizhenShi@bitbucket.org/LizhenShi/fastseq.git`
 
-   `cd fastseq`
+  `cd fastseq`
 
-2. install csparc which wraps a c version of k-mer generator I used in another project
+- install csparc which wraps a c version of k-mer generator I used in another project
 
-   `pip install pysparc-0.1-cp27-cp27mu-linux_x86_64.whl`
+  for python 2
 
-   or if python 3
+  `pip install pysparc-0.1-cp27-cp27mu-linux_x86_64.whl`
 
-   `pip install pysparc-0.1-cp36-cp36m-linux_x86_64.whl`
+  or for python 3
 
-3. make fastseq
+  `pip install pysparc-0.1-cp36-cp36m-linux_x86_64.whl`
 
-   `make`
+- make fastseq
+
+  `make`
 
 ## Examples
 

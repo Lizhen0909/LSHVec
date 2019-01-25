@@ -55,7 +55,7 @@ class RandProj(object):
         
     def _set_wheels(self,kmers, wheels=200):
         Wheels = []
-        for w in xrange(wheels):
+        for w in range(wheels):
             Wheels += self._one_wheel(w,kmers)
         Wheels.sort()
         self.Wheels = [{'w': x[0],'s': x[1],'p': x[2],'c': x[3]} for x in Wheels]

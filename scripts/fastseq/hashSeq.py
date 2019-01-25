@@ -85,17 +85,17 @@ def main(argv):
     
     help_msg = sys.argv[0] + ' -i <seq_file> --hash <fnv or lsh> -o <outfile> [-k <kmer_size>] [--n_thread <n>] [--hash_size <m>] [--batch_size <n>] [--bucket <n>]'
     if len(argv) < 2:
-        print help_msg
+        print (help_msg)
         sys.exit(2) 
     else:
         try:
             opts, args = getopt.getopt(argv, "hi:o:k:", ["in_file=", "hash=", "out_file=", "n_thread=", "hash_size=", 'batch_size=', 'bucket='])
         except getopt.GetoptError:
-            print help_msg
+            print (help_msg)
             sys.exit(2)
         for opt, arg in opts:
             if opt == '-h':
-                print help_msg
+                print (help_msg)
                 sys.exit()
             elif opt in ("-i", "--in_file"):
                 in_file = arg
@@ -119,7 +119,7 @@ def main(argv):
             elif opt in ("-o", "--out_file"):
                 out_file = arg
         if hash_fun not in ['fnv', 'lsh', 'onehot']:
-            print help_msg 
+            print (help_msg)
             exit(3)  
     convert(in_file, out_file, hash_fun, kmer_size, n_thread=n_thread, hash_size=hash_size, batch_size=batch_size, bucket=bucket)
 

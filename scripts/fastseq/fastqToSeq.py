@@ -54,11 +54,11 @@ def extract_data(in_file, out_file, paired, shuffle):
             if lineno%4 == 2: 
                 seq_list.append(str(no_seq)+"\t"+seqID + "\t" + sub_re.sub("N",line[:-1].upper()) + "\n")
                 no_seq+=1     
-	    if len(seq_list) > 1e6:
-    		if shuffle:
-        	    random.shuffle(seq_list)
-    		out.writelines(seq_list)
-    	    	seq_list = []
+        if len(seq_list) > 1e6:
+            if shuffle:
+                random.shuffle(seq_list)
+                out.writelines(seq_list)
+                seq_list = []
         seq.close()
         
     if shuffle:
@@ -74,17 +74,17 @@ def main(argv):
     out_file = ''
     help_msg = sys.argv[0] + ' -i <fastq_file> -p <1 is paired, 0 otherwise> -o <outfile> -s <1 to shuffle, 0 otherwise>'
     if len(argv) < 2:
-        print help_msg
+        print (help_msg)
         sys.exit(2) 
     else:
         try:
             opts, args = getopt.getopt(argv, "hi:p:o:s:", ["in_file=","paired=", "out_file=", "shuffle="])
         except getopt.GetoptError:
-            print help_msg
+            print (help_msg)
             sys.exit(2)
         for opt, arg in opts:
             if opt == '-h':
-                print help_msg
+                print (help_msg)
                 sys.exit()
             elif opt in ("-i", "--in_file"):
                 in_file = arg

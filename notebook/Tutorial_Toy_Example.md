@@ -42,7 +42,7 @@ if not os.path.exists('lsaTestData.tar.gz'):
     lsaTestData.tar.gz  100%[===================>]  16.97M  5.37MB/s    in 3.4s    
     
     2019-01-24 20:18:47 (5.00 MB/s) - ‘lsaTestData.tar.gz’ saved [17790844/17790844]
-    
+
 
 
 
@@ -139,21 +139,12 @@ seqs[seqs['is_spike']].head()
 
 
 
-
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -195,8 +186,6 @@ seqs[seqs['is_spike']].head()
     </tr>
   </tbody>
 </table>
-</div>
-
 
 
 ### Now train TSNE

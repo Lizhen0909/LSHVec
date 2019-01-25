@@ -47,6 +47,8 @@ A toy example, which is laptop friendly and should finish in 10 minutes,  can be
 
 A practical example which uses ActinoMock Nanopore data can be found at [Tutorial_ActinoMock_Nanopore.ipynb](notebook/Tutorial_ActinoMock_Nanopore.ipynb) or [Tutorial_ActinoMock_Nanopore.md](notebook/Tutorial_ActinoMock_Nanopore.md). The notebook ran on a 16-core 64G-mem node and took a few hours (I think 32G mem should work too).
 
+![](notebook/Tutorial_Toy_Example_files/Tutorial_Toy_Example_20_1.png, "toy_example_image")
+
 ## Command line options
 
 ### fastqToSeq.py

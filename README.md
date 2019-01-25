@@ -1,339 +1,88 @@
-## Table of contents
+# FastSeq: Locality Sensitive Vector Representation of DNA Sequences
 
-* [Introduction](#introduction)
-* [Resources](#resources)
-   * [Models](#models)
-   * [Supplementary data](#supplementary-data)
-   * [FAQ](#faq)
-   * [Cheatsheet](#cheatsheet)
-* [Requirements](#requirements)
-* [Building fastText](#building-fasttext)
-   * [Getting the source code](#getting-the-source-code)
-   * [Building fastText using make (preferred)](#building-fasttext-using-make-preferred)
-   * [Building fastText using cmake](#building-fasttext-using-cmake)
-   * [Building fastText for Python](#building-fasttext-for-python)
-* [Example use cases](#example-use-cases)
-   * [Word representation learning](#word-representation-learning)
-   * [Obtaining word vectors for out-of-vocabulary words](#obtaining-word-vectors-for-out-of-vocabulary-words)
-   * [Text classification](#text-classification)
-* [Full documentation](#full-documentation)
-* [References](#references)
-   * [Enriching Word Vectors with Subword Information](#enriching-word-vectors-with-subword-information)
-   * [Bag of Tricks for Efficient Text Classification](#bag-of-tricks-for-efficient-text-classification)
-   * [FastText.zip: Compressing text classification models](#fasttextzip-compressing-text-classification-models)
-* [Join the fastText community](#join-the-fasttext-community)
-* [License](#license)
+## Summary
 
-## Introduction
+FastSeq is a k-mer embedding software which extends [FastText](https://fasttext.cc/) . It applies LSH (Locality Sensitive Hashing) to reduce the size of k-mer vocabulary and improve the performance of embedding.  
 
-[fastText](https://fasttext.cc/) is a library for efficient learning of word representations and sentence classification.
-
-## Resources
-
-### Models
-- Recent state-of-the-art [English word vectors](https://fasttext.cc/docs/en/english-vectors.html).
-- Word vectors for [157 languages trained on Wikipedia and Crawl](https://github.com/facebookresearch/fastText/blob/master/docs/crawl-vectors.md).
-- Models for [language identification](https://fasttext.cc/docs/en/language-identification.html#content) and [various supervised tasks](https://fasttext.cc/docs/en/supervised-models.html#content).
-
-### Supplementary data
-- The preprocessed [YFCC100M data](https://fasttext.cc/docs/en/dataset.html#content) used in [2].
-
-### FAQ
-
-You can find [answers to frequently asked questions](https://fasttext.cc/docs/en/faqs.html#content) on our [website](https://fasttext.cc/).
-
-### Cheatsheet
-
-We also provide a [cheatsheet](https://fasttext.cc/docs/en/cheatsheet.html#content) full of useful one-liners.
+To cite FastSeq: 
 
 ## Requirements
 
-We are continously building and testing our library, CLI and Python bindings under various docker images using [circleci](https://circleci.com/).
+Here is the environment I worked on.  Other versions may also work. Python 3 should work, but I don't use it a lot.
 
-Generally, **fastText** builds on modern Mac OS and Linux distributions.
-Since it uses some C++11 features, it requires a compiler with good C++11 support.
-These include :
+1. Linux, gcc with C++11
+2. Python 2.7 or Python 3.6
+   - joblib 0.12.4
+   - tqdm 4.28.1
+   - numpy 1.15.0
+   - pandas 0.23.4
+   - sklearn 0.19.1 (only for evaluation)
+   - MulticoreTSNE (only for visualization)
+   - cython 0.28.5
+   - csparc (included)
 
-* (g++-4.7.2 or newer) or (clang-3.3 or newer)
+## Build 
 
-Compilation is carried out using a Makefile, so you will need to have a working **make**.
-If you want to use **cmake** you need at least version 2.8.9.
+1. clone from git
 
-One of the oldest distributions we successfully built and tested the CLI under is [Debian wheezy](https://www.debian.org/releases/wheezy/).
+   `git clone https://LizhenShi@bitbucket.org/LizhenShi/fastseq.git`
 
-For the word-similarity evaluation script you will need:
+   `cd fastseq`
 
-* Python 2.6 or newer
-* NumPy & SciPy
+2. install csparc which wraps a c version of k-mer generator I used in another project
 
-For the python bindings (see the subdirectory python) you will need:
+   `pip install pysparc-0.1-cp27-cp27mu-linux_x86_64.whl`
 
-* Python version 2.7 or >=3.4
-* NumPy & SciPy
-* [pybind11](https://github.com/pybind/pybind11)
+   or if python 3
 
-One of the oldest distributions we successfully built and tested the Python bindings under is [Debian jessie](https://www.debian.org/releases/jessie/).
+   `pip install pysparc-0.1-cp36-cp36m-linux_x86_64.whl`
 
-If these requirements make it impossible for you to use fastText, please open an issue and we will try to accommodate you.
+3. make fastseq
 
-## Building fastText
+   `make`
 
-We discuss building the latest stable version of fastText.
+## Examples
 
-### Getting the source code
+A toy example, which is laptop friendly and should finish in 10 minutes,  can be found in [Tutorial_Toy_Example.ipynb](http://xxxx) or [Tutorial_Toy_Example.html](http://xxxx). Because of randomness the result may be different.
 
-You can find our [latest stable release](https://github.com/facebookresearch/fastText/releases/latest) in the usual place.
+A practical example which uses ActinoMock Nanopore data can be found at [Tutorial_ActinoMock_Nanopore.ipynb](http://xxxx) or [Tutorial_ActinoMock_Nanopore.html](http://xxxxx). The notebook ran on a 16-core 64G-mem node and took a few hours (I think 32G mem should work too).
 
-There is also the master branch that contains all of our most recent work, but comes along with all the usual caveats of an unstable branch. You might want to use this if you are a developer or power-user.
+## Command line options
 
-### Building fastText using make (preferred)
+### fastqToSeq.py
 
-```
-$ wget https://github.com/facebookresearch/fastText/archive/v0.1.0.zip
-$ unzip v0.1.0.zip
-$ cd fastText-0.1.0
-$ make
-```
+convert a fastq file to a seq file
 
-This will produce object files for all the classes as well as the main binary `fasttext`.
-If you do not plan on using the default system-wide compiler, update the two macros defined at the beginning of the Makefile (CC and INCLUDES).
+    python fastqToSeq.py -i <fastq_file> -o <out seq file> -s <1 to shuffle, 0 otherwise>
 
-### Building fastText using cmake
+###  hashSeq.py
 
-For now this is not part of a release, so you will need to clone the master branch.
+Encode reads in a seq file use an encoding method.
 
-```
-$ git clone https://github.com/facebookresearch/fastText.git
-$ cd fastText
-$ mkdir build && cd build && cmake ..
-$ make && make install
-```
+    python hashSeq.py -i <seq_file> --hash <fnv,lsh or onehot> -o <outfile> [-k <kmer_size>] [--n_thread <n>] [--hash_size <m>] [--batch_size <n>] [--bucket <n>]
+    
+      --hash_size <m>:        only used by lsh which defines 2^m bucket.
+      --bucket <n>:           number of bucket for hash trick, useless for onehot.
+       				          For fnv and lsh it limits the max number of words.
+       				          For lsh the max number of words is min(2^m, n).
+      --batch_size <b>:       how many reads are processed at a time. A small value uses less memory.
 
-This will create the fasttext binary and also all relevant libraries (shared, static, PIC).
 
-### Building fastText for Python
+### fastseq
 
-For now this is not part of a release, so you will need to clone the master branch.
+Please refer to [fasttext options](https://fasttext.cc/docs/en/options.html).  However note that options of `wordNgrams`, `minn`,`maxn` does not work with fastseq.
 
-```
-$ git clone https://github.com/facebookresearch/fastText.git
-$ cd fastText
-$ pip install .
-```
 
-For further information and introduction see python/README.md
 
-## Example use cases
+## Questions
 
-This library has two main use cases: word representation learning and text classification.
-These were described in the two papers [1](#enriching-word-vectors-with-subword-information) and [2](#bag-of-tricks-for-efficient-text-classification).
+1. `fastseq` gets stuck at `Read xxxM words` 
 
-### Word representation learning
+   Search `MAX_VOCAB_SIZE` in the source code and change it to a bigger one.  When a word's index is bigger than that number, a loop is carried to query it, which is costly. The number is 30M in FastText which is good for languages. But it is too small for k-mers. The number has been already increased to 300M in FastSeq. But for large and/or high-error-rate data, it may be still not enough.
 
-In order to learn word vectors, as described in [1](#enriching-word-vectors-with-subword-information), do:
 
-```
-$ ./fasttext skipgram -input data.txt -output model
-```
-
-where `data.txt` is a training file containing `UTF-8` encoded text.
-By default the word vectors will take into account character n-grams from 3 to 6 characters.
-At the end of optimization the program will save two files: `model.bin` and `model.vec`.
-`model.vec` is a text file containing the word vectors, one per line.
-`model.bin` is a binary file containing the parameters of the model along with the dictionary and all hyper parameters.
-The binary file can be used later to compute word vectors or to restart the optimization.
-
-### Obtaining word vectors for out-of-vocabulary words
-
-The previously trained model can be used to compute word vectors for out-of-vocabulary words.
-Provided you have a text file `queries.txt` containing words for which you want to compute vectors, use the following command:
-
-```
-$ ./fasttext print-word-vectors model.bin < queries.txt
-```
-
-This will output word vectors to the standard output, one vector per line.
-This can also be used with pipes:
-
-```
-$ cat queries.txt | ./fasttext print-word-vectors model.bin
-```
-
-See the provided scripts for an example. For instance, running:
-
-```
-$ ./word-vector-example.sh
-```
-
-will compile the code, download data, compute word vectors and evaluate them on the rare words similarity dataset RW [Thang et al. 2013].
-
-### Text classification
-
-This library can also be used to train supervised text classifiers, for instance for sentiment analysis.
-In order to train a text classifier using the method described in [2](#bag-of-tricks-for-efficient-text-classification), use:
-
-```
-$ ./fasttext supervised -input train.txt -output model
-```
-
-where `train.txt` is a text file containing a training sentence per line along with the labels.
-By default, we assume that labels are words that are prefixed by the string `__label__`.
-This will output two files: `model.bin` and `model.vec`.
-Once the model was trained, you can evaluate it by computing the precision and recall at k (P@k and R@k) on a test set using:
-
-```
-$ ./fasttext test model.bin test.txt k
-```
-
-The argument `k` is optional, and is equal to `1` by default.
-
-In order to obtain the k most likely labels for a piece of text, use:
-
-```
-$ ./fasttext predict model.bin test.txt k
-```
-
-or use `predict-prob` to also get the probability for each label
-
-```
-$ ./fasttext predict-prob model.bin test.txt k
-```
-
-where `test.txt` contains a piece of text to classify per line.
-Doing so will print to the standard output the k most likely labels for each line.
-The argument `k` is optional, and equal to `1` by default.
-See `classification-example.sh` for an example use case.
-In order to reproduce results from the paper [2](#bag-of-tricks-for-efficient-text-classification), run `classification-results.sh`, this will download all the datasets and reproduce the results from Table 1.
-
-If you want to compute vector representations of sentences or paragraphs, please use:
-
-```
-$ ./fasttext print-sentence-vectors model.bin < text.txt
-```
-
-This assumes that the `text.txt` file contains the paragraphs that you want to get vectors for.
-The program will output one vector representation per line in the file.
-
-You can also quantize a supervised model to reduce its memory usage with the following command:
-
-```
-$ ./fasttext quantize -output model
-```
-This will create a `.ftz` file with a smaller memory footprint. All the standard functionality, like `test` or `predict` work the same way on the quantized models:
-```
-$ ./fasttext test model.ftz test.txt
-```
-The quantization procedure follows the steps described in [3](#fasttextzip-compressing-text-classification-models). You can
-run the script `quantization-example.sh` for an example.
-
-
-## Full documentation
-
-Invoke a command without arguments to list available arguments and their default values:
-
-```
-$ ./fasttext supervised
-Empty input or output path.
-
-The following arguments are mandatory:
-  -input              training file path
-  -output             output file path
-
-The following arguments are optional:
-  -verbose            verbosity level [2]
-
-The following arguments for the dictionary are optional:
-  -minCount           minimal number of word occurences [1]
-  -minCountLabel      minimal number of label occurences [0]
-  -wordNgrams         max length of word ngram [1]
-  -bucket             number of buckets [2000000]
-  -minn               min length of char ngram [0]
-  -maxn               max length of char ngram [0]
-  -t                  sampling threshold [0.0001]
-  -label              labels prefix [__label__]
-
-The following arguments for training are optional:
-  -lr                 learning rate [0.1]
-  -lrUpdateRate       change the rate of updates for the learning rate [100]
-  -dim                size of word vectors [100]
-  -ws                 size of the context window [5]
-  -epoch              number of epochs [5]
-  -neg                number of negatives sampled [5]
-  -loss               loss function {ns, hs, softmax} [softmax]
-  -thread             number of threads [12]
-  -pretrainedVectors  pretrained word vectors for supervised learning []
-  -saveOutput         whether output params should be saved [0]
-
-The following arguments for quantization are optional:
-  -cutoff             number of words and ngrams to retain [0]
-  -retrain            finetune embeddings if a cutoff is applied [0]
-  -qnorm              quantizing the norm separately [0]
-  -qout               quantizing the classifier [0]
-  -dsub               size of each sub-vector [2]
-```
-
-Defaults may vary by mode. (Word-representation modes `skipgram` and `cbow` use a default `-minCount` of 5.)
-
-## References
-
-Please cite [1](#enriching-word-vectors-with-subword-information) if using this code for learning word representations or [2](#bag-of-tricks-for-efficient-text-classification) if using for text classification.
-
-### Enriching Word Vectors with Subword Information
-
-[1] P. Bojanowski\*, E. Grave\*, A. Joulin, T. Mikolov, [*Enriching Word Vectors with Subword Information*](https://arxiv.org/abs/1607.04606)
-
-```
-@article{bojanowski2017enriching,
-  title={Enriching Word Vectors with Subword Information},
-  author={Bojanowski, Piotr and Grave, Edouard and Joulin, Armand and Mikolov, Tomas},
-  journal={Transactions of the Association for Computational Linguistics},
-  volume={5},
-  year={2017},
-  issn={2307-387X},
-  pages={135--146}
-}
-```
-
-### Bag of Tricks for Efficient Text Classification
-
-[2] A. Joulin, E. Grave, P. Bojanowski, T. Mikolov, [*Bag of Tricks for Efficient Text Classification*](https://arxiv.org/abs/1607.01759)
-
-```
-@InProceedings{joulin2017bag,
-  title={Bag of Tricks for Efficient Text Classification},
-  author={Joulin, Armand and Grave, Edouard and Bojanowski, Piotr and Mikolov, Tomas},
-  booktitle={Proceedings of the 15th Conference of the European Chapter of the Association for Computational Linguistics: Volume 2, Short Papers},
-  month={April},
-  year={2017},
-  publisher={Association for Computational Linguistics},
-  pages={427--431},
-}
-```
-
-### FastText.zip: Compressing text classification models
-
-[3] A. Joulin, E. Grave, P. Bojanowski, M. Douze, H. Jégou, T. Mikolov, [*FastText.zip: Compressing text classification models*](https://arxiv.org/abs/1612.03651)
-
-```
-@article{joulin2016fasttext,
-  title={FastText.zip: Compressing text classification models},
-  author={Joulin, Armand and Grave, Edouard and Bojanowski, Piotr and Douze, Matthijs and J{\'e}gou, H{\'e}rve and Mikolov, Tomas},
-  journal={arXiv preprint arXiv:1612.03651},
-  year={2016}
-}
-```
-
-(\* These authors contributed equally.)
-
-
-## Join the fastText community
-
-* Facebook page: https://www.facebook.com/groups/1174547215919768
-* Google group: https://groups.google.com/forum/#!forum/fasttext-library
-* Contact: [egrave@fb.com](mailto:egrave@fb.com), [bojanowski@fb.com](mailto:bojanowski@fb.com), [ajoulin@fb.com](mailto:ajoulin@fb.com), [tmikolov@fb.com](mailto:tmikolov@fb.com)
-
-See the CONTRIBUTING file for information about how to help out.
 
 ## License
 
-fastText is BSD-licensed. We also provide an additional patent grant.
+Inherit license from FastText which is BSD License
+

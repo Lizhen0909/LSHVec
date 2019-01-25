@@ -139,55 +139,6 @@ seqs[seqs['is_spike']].head()
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>is_spike</th>
-      <th>vec</th>
-    </tr>
-    <tr>
-      <th>0</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>10001</th>
-      <td>True</td>
-      <td>[0.20901083720930236, 0.15879133023255815, -0....</td>
-    </tr>
-    <tr>
-      <th>10002</th>
-      <td>True</td>
-      <td>[-0.13977729186046522, -0.20089517674418603, 0...</td>
-    </tr>
-    <tr>
-      <th>10003</th>
-      <td>True</td>
-      <td>[0.11275851511627906, -0.12522697674418604, -0...</td>
-    </tr>
-    <tr>
-      <th>10004</th>
-      <td>True</td>
-      <td>[0.2775530279069768, -0.1323303697674418, -0.1...</td>
-    </tr>
-    <tr>
-      <th>10005</th>
-      <td>True</td>
-      <td>[0.10739388720930242, -0.0324119953488372, -0....</td>
-    </tr>
-  </tbody>
-</table>
-
-
 ### Now train TSNE
 
 

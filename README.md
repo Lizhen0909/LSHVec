@@ -43,9 +43,9 @@ Here is the environment I worked on.  Other versions may also work. Python 3 sho
 
 ## Examples
 
-A toy example, which is laptop friendly and should finish in 10 minutes,  can be found in [Tutorial_Toy_Example.ipynb](http://xxxx) or [Tutorial_Toy_Example.html](http://xxxx). Because of randomness the result may be different.
+A toy example, which is laptop friendly and should finish in 10 minutes,  can be found in [Tutorial_Toy_Example.ipynb](notebook/Tutorial_Toy_Example.ipynb) or [Tutorial_Toy_Example.html](notebook/Tutorial_Toy_Example.html). Because of randomness the result may be different.
 
-A practical example which uses ActinoMock Nanopore data can be found at [Tutorial_ActinoMock_Nanopore.ipynb](http://xxxx) or [Tutorial_ActinoMock_Nanopore.html](http://xxxxx). The notebook ran on a 16-core 64G-mem node and took a few hours (I think 32G mem should work too).
+A practical example which uses ActinoMock Nanopore data can be found at [Tutorial_ActinoMock_Nanopore.ipynb](notebook/Tutorial_ActinoMock_Nanopore.ipynb) or [Tutorial_ActinoMock_Nanopore.html](notebook/Tutorial_ActinoMock_Nanopore.html). The notebook ran on a 16-core 64G-mem node and took a few hours (I think 32G mem should work too).
 
 ## Command line options
 

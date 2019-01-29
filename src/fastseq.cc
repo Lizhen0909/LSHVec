@@ -60,15 +60,20 @@ int32_t FastSeq::getSubwordId(const std::string& word) const {
   return dict_->nwords() + h;
 }
 
-void FastSeq::getWordVector(Vector& vec, const std::string& word) const {
+int FastSeq::getWordVector(Vector& vec, const std::string& word) const {
   const std::vector<int32_t>& ngrams = dict_->getSubwords(word);
   vec.zero();
+  if (ngrams.size()==0){
+	  return -1;
+  }
+
   for (int i = 0; i < ngrams.size(); i ++) {
     addInputVector(vec, ngrams[i]);
   }
   if (ngrams.size() > 0) {
     vec.mul(1.0 / ngrams.size());
   }
+  return 0;
 }
 
 void FastSeq::getVector(Vector& vec, const std::string& word) const {
@@ -462,7 +467,8 @@ void FastSeq::getSentenceVector(
     std::string word;
     int32_t count = 0;
     while (iss >> word) {
-      getWordVector(vec, word);
+      int status = getWordVector(vec, word);
+      if (status!=0) continue;
       real norm = vec.norm();
       if (norm > 0) {
         vec.mul(1.0 / norm);

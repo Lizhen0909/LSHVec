@@ -56,7 +56,7 @@ class FastSeq {
   FASTTEXT_DEPRECATED(
     "getVector is being deprecated and replaced by getWordVector.")
   void getVector(Vector&, const std::string&) const;
-  void getWordVector(Vector&, const std::string&) const;
+  int getWordVector(Vector&, const std::string&) const;
   void getSubwordVector(Vector&, const std::string&) const;
   void addInputVector(Vector&, int32_t) const;
   inline void getInputVector(Vector& vec, int32_t ind) {

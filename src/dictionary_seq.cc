@@ -91,6 +91,7 @@ const std::vector<int32_t> DictionarySeq::getSubwords(
   if (i >= 0) {
     return getSubwords(i);
   }
+  return std::vector<int32_t>();
   ERROR( (word+" is not in dictionary").c_str())
   std::vector<int32_t> ngrams;
   if (word != EOS) {

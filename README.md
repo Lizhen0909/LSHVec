@@ -90,8 +90,8 @@ Please refer to [fasttext options](https://fasttext.cc/docs/en/options.html).  H
 
   hashSeq reads all data into memory to sample k-mers for hyperplanes. If data is too big it may not fit into memory. One can 
 
-  - Try sampling. DNA reads generally have high coverage. Such high coverage may not be necessary. 
-  - Or use `create_hash_only` to create lsh on a small (sampled) data; then split your data into multiple files and run hashSeq with `lsh_file` option on many nodes.
+  1. Try sampling. DNA reads generally have high coverage. Such high coverage may not be necessary. 
+  2. Or use `create_hash_only` to create lsh on a small (sampled) data; then split your data into multiple files and run hashSeq with `lsh_file` option on many nodes.
 
 
 

@@ -65,7 +65,7 @@ convert a fastq file to a seq file
 
 Encode reads in a seq file use an encoding method.
 
-    python hashSeq.py -i <seq_file> --hash <fnv,lsh or onehot> -o <outfile> [-k <kmer_size>] [--n_thread <n>] [--hash_size <m>] [--batch_size <n>] [--bucket <n>]
+    python hashSeq.py -i <seq_file> --hash <fnv or lsh> -o <outfile> [-k <kmer_size>] [--n_thread <n>] [--hash_size <m>] [--batch_size <n>] [--bucket <n>] [--lsh_file <file>] [--create_lsh_only]
     
       --hash_size <m>:        only used by lsh which defines 2^m bucket.
       --bucket <n>:           number of bucket for hash trick, useless for onehot.
@@ -82,9 +82,16 @@ Please refer to [fasttext options](https://fasttext.cc/docs/en/options.html).  H
 
 ## Questions
 
-1. `fastseq` gets stuck at `Read xxxM words` 
+-  `fastseq` gets stuck at `Read xxxM words` 
 
-   Search `MAX_VOCAB_SIZE` in the source code and change it to a bigger one.  When a word's index is bigger than that number, a loop is carried to query it, which is costly. The number is 30M in FastText which is good for languages. But it is too small for k-mers. The number has been already increased to 300M in FastSeq. But for large and/or high-error-rate data, it may be still not enough.
+  Search `MAX_VOCAB_SIZE` in the source code and change it to a bigger one.  When a word's index is bigger than that number, a loop is carried to query it, which is costly. The number is 30M in FastText which is good for languages. But it is too small for k-mers. The number has been already increased to 300M in FastSeq. But for large and/or high-error-rate data, it may be still not enough.
+
+- I have big data 
+
+  hashSeq reads all data into memory to sample k-mers for hyperplanes. If data is too big it may not fit into memory. One can 
+
+  - Try sampling. DNA reads generally have high coverage. Such high coverage may not be necessary. 
+  - Or use `create_hash_only` to create lsh on a small (sampled) data; then split your data into multiple files and run hashSeq with `lsh_file` option on many nodes.
 
 
 

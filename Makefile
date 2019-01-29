@@ -13,10 +13,10 @@ OBJS = args.o dictionary.o productquantizer.o matrix.o qmatrix.o vector.o model.
 INCLUDES = -I.
 
 opt: CXXFLAGS += -O3 -funroll-loops
-opt: fasttext fastseq
+opt: fastseq
 
 debug: CXXFLAGS += -g -O0 -ggdb -fno-inline
-debug: fasttext fastseq
+debug: fastseq
 
 args.o: src/args.cc src/args.h
 	$(CXX) $(CXXFLAGS) -c src/args.cc

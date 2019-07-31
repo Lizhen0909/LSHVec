@@ -13,10 +13,10 @@ OBJS = args.o dictionary.o productquantizer.o matrix.o qmatrix.o vector.o model.
 INCLUDES = -I.
 
 opt: CXXFLAGS += -O3 -funroll-loops
-opt: fastseq
+opt: lshvec
 
 debug: CXXFLAGS += -g -O0 -ggdb -fno-inline
-debug: fastseq
+debug: lshvec
 
 args.o: src/args.cc src/args.h
 	$(CXX) $(CXXFLAGS) -c src/args.cc
@@ -54,8 +54,8 @@ dictionary_seq.o: src/dictionary_seq.cc src/dictionary_seq.h src/args.h
 fastseq.o: src/fastseq.cc src/*.h
 	$(CXX) $(CXXFLAGS) -c src/fastseq.cc
 	
-fastseq: $(OBJS) src/fastseq.cc src/main_fastseq.cc
-	$(CXX) $(CXXFLAGS) $(OBJS) src/main_fastseq.cc -o fastseq
+lshvec: $(OBJS) src/fastseq.cc src/main_fastseq.cc
+	$(CXX) $(CXXFLAGS) $(OBJS) src/main_fastseq.cc -o lshvec
 	
 clean:
-	rm -rf *.o fasttext
+	rm -rf *.o fasttext fastseq lshvec

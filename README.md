@@ -31,13 +31,17 @@ Here is the environment I worked on.  Other versions may also work. Python 3 sho
 
 - install csparc which wraps a c version of k-mer generator I used in another project
 
-  for python 2
+  for python 2.7
 
   `pip install pysparc-0.1-cp27-cp27mu-linux_x86_64.whl`
 
-  or for python 3
+  or for python 3.6
 
   `pip install pysparc-0.1-cp36-cp36m-linux_x86_64.whl`
+
+  or for python 3.7
+
+  `pip install pysparc-0.1-cp37-cp37m-linux_x86_64.whl`
 
 - make fastseq
 

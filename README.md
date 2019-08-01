@@ -25,9 +25,9 @@ Here is the environment I worked on.  Other versions may also work. Python 3 sho
 
 - clone from git
 
-  `git clone https://LizhenShi@bitbucket.org/LizhenShi/fastseq.git`
+  `git clone https://LizhenShi@bitbucket.org/LizhenShi/lshvec.git`
 
-  `cd fastseq`
+  `cd lshvec`
 
 - install csparc which wraps a c version of k-mer generator I used in another project
 
@@ -43,7 +43,7 @@ Here is the environment I worked on.  Other versions may also work. Python 3 sho
 
   `pip install pysparc-0.1-cp37-cp37m-linux_x86_64.whl`
 
-- make fastseq
+- make 
 
   `make`
 
@@ -78,15 +78,15 @@ Encode reads in a seq file use an encoding method.
       --batch_size <b>:       how many reads are processed at a time. A small value uses less memory.
 
 
-### fastseq
+### lshvec
 
-Please refer to [fasttext options](https://fasttext.cc/docs/en/options.html).  However note that options of `wordNgrams`, `minn`,`maxn` does not work with fastseq.
+Please refer to [fasttext options](https://fasttext.cc/docs/en/options.html).  However note that options of `wordNgrams`, `minn`,`maxn` does not work with lshvec.
 
 
 
 ## Questions
 
--  `fastseq` gets stuck at `Read xxxM words` 
+-  `lshvec` gets stuck at `Read xxxM words` 
 
   Search `MAX_VOCAB_SIZE` in the source code and change it to a bigger one.  When a word's index is bigger than that number, a loop is carried to query it, which is costly. The number is 30M in FastText which is good for languages. But it is too small for k-mers. The number has been already increased to 300M in FastSeq. But for large and/or high-error-rate data, it may be still not enough.
 

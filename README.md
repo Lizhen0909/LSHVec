@@ -4,6 +4,8 @@
 
 LSHVec is a k-mer/sequence embedding/classfication software which extends [FastText](https://fasttext.cc/) . It applies LSH (Locality Sensitive Hashing) to reduce the size of k-mer vocabulary and improve the performance of embedding.
 
+Besides building from source code, LSHVec can run using docker or singularity.
+
 To cite LSHVec: 
 
 ## Requirements
@@ -103,6 +105,29 @@ run lshvec:
 
     docker run -v /path/in/host:/host lshvec:latest bash -c "cd /host && lshvec skipgram -input data.hash -output model"
 
+## Example of Singularity Run 
+
+When running using Singularity, it is probably in an HPC environment. The running is similar to docker. However depending on the version of singularity, commands and paths might be different, especially from 2.x to 3.x. Here is an example for version 2.5.0. 
+
+Also it is better to specify number of threads, otherwise max number of cores will be used which is not desired in HPC environment.
+
+Pull from docker hub:
+
+    singularity pull --name lshvec.sif shub://Lizhen0909/LSHVec
+    
+Put `data.fastq` file is in host `/tmp`,  since Singularity automatically mount `/tmp` folder.
+
+convert fastq to a seq file:
+
+    singularity run /path/to/lshvec.sif bash -c "cd /tmp && fastqToSeq.py  -i data.fastq -o data.seq"
+    
+create LSH:
+
+    singularity run /path/to/lshvec.sif bash -c "cd /tmp && hashSeq.py -i data.seq --hash lsh -o data.hash -k 15 --n_thread 12"
+
+run lshvec:
+
+    singularity run /path/to/lshvec.sif bash -c "cd /tmp && lshvec skipgram -input data.hash -output model -thread 12"
 
 
 ## Questions

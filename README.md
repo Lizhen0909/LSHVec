@@ -1,17 +1,17 @@
-# FastSeq: Locality Sensitive Vector Representation of DNA Sequences
+# LSHVec: Locality Sensitive Vector Representation of DNA Sequences
 
 ## Summary
 
-FastSeq is a k-mer embedding software which extends [FastText](https://fasttext.cc/) . It applies LSH (Locality Sensitive Hashing) to reduce the size of k-mer vocabulary and improve the performance of embedding.  
+LSHVec is a k-mer/sequence embedding/classfication software which extends [FastText](https://fasttext.cc/) . It applies LSH (Locality Sensitive Hashing) to reduce the size of k-mer vocabulary and improve the performance of embedding.
 
-To cite FastSeq: 
+To cite LSHVec: 
 
 ## Requirements
 
 Here is the environment I worked on.  Other versions may also work. Python 3 should work, but I don't use it a lot.
 
 1. Linux, gcc with C++11
-2. Python 2.7 or Python 3.6
+2. Python 2.7 or Python 3.6 or 3.7
    - joblib 0.12.4
    - tqdm 4.28.1
    - numpy 1.15.0
@@ -21,7 +21,7 @@ Here is the environment I worked on.  Other versions may also work. Python 3 sho
    - cython 0.28.5
    - csparc (included)
 
-## Build 
+## Build from Source
 
 - clone from git
 
@@ -47,7 +47,7 @@ Here is the environment I worked on.  Other versions may also work. Python 3 sho
 
   `make`
 
-## Examples
+## Jupyter Notebook Examples
 
 A toy example, which is laptop friendly and should finish in 10 minutes,  can be found in [Tutorial_Toy_Example.ipynb](notebook/Tutorial_Toy_Example.ipynb). Because of randomness the result may be different.
 
@@ -81,6 +81,27 @@ Encode reads in a seq file use an encoding method.
 ### lshvec
 
 Please refer to [fasttext options](https://fasttext.cc/docs/en/options.html).  However note that options of `wordNgrams`, `minn`,`maxn` does not work with lshvec.
+
+
+## Example of Docker Run 
+
+Pull from docker hub:
+
+    docker pull lizhen0909/lshvec:latest
+    
+Assume `data.fastq` file is in folder `/path/in/host`.
+
+convert fastq to a seq file:
+
+    docker run -v /path/in/host:/host lshvec:latest bash -c "cd /host && fastqToSeq.py  -i data.fastq -o data.seq"
+    
+create LSH:
+
+    docker run -v /path/in/host:/host lshvec:latest bash -c "cd /host && hashSeq.py -i data.seq --hash lsh -o data.hash -k 15"
+
+run lshvec:
+
+    docker run -v /path/in/host:/host lshvec:latest bash -c "cd /host && lshvec skipgram -input data.hash -output model"
 
 
 

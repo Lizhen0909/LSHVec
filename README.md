@@ -1,4 +1,4 @@
-# LSHVec: Locality Sensitive Vector Representation of DNA Sequences
+# LSHVec: A Vector Representation of DNA Sequences Using Locality Sensitive Hashing
 
 ## Summary
 
@@ -6,7 +6,7 @@ LSHVec is a k-mer/sequence embedding/classfication software which extends [FastT
 
 Besides building from source code, LSHVec can run using docker or singularity.
 
-To cite LSHVec: 
+Please refer to [A Vector Representation of DNA Sequences Using Locality Sensitive Hashing](https://www.biorxiv.org/content/10.1101/726729v1) for the idea and experiments.
 
 ## Requirements
 

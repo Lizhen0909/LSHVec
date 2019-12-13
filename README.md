@@ -8,6 +8,8 @@ Besides building from source code, LSHVec can run using docker or singularity.
 
 Please refer to [A Vector Representation of DNA Sequences Using Locality Sensitive Hashing](https://www.biorxiv.org/content/10.1101/726729v1) for the idea and experiments.
 
+There are also some pretained models that can be used, please see [PyLSHvec](https://github.com/Lizhen0909/PyLSHvec/blob/master/README.md) for details.
+
 ## Requirements
 
 Here is the environment I worked on.  Other versions may also work. Python 3 should work, but I don't use it a lot.
@@ -143,6 +145,15 @@ run lshvec:
   1. Try sampling. DNA reads generally have high coverage. Such high coverage may not be necessary. 
   2. Or use `create_hash_only` to create lsh on a small (sampled) data; then split your data into multiple files and run hashSeq with `lsh_file` option on many nodes.
 
+- core dumped when hashing 
+
+   Error like 
+
+      terminate called after throwing an instance of 'std::out_of_range'
+      what(): map::at
+      Aborted (core dumped)
+
+   mostly because a sequence contains characters other than ACGTN. So please convert non-ACGT characters to N's. 
 
 
 ## License

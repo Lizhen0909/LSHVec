@@ -1,5 +1,7 @@
 # LSHVec: A Vector Representation of DNA Sequences Using Locality Sensitive Hashing
 
+### July 2021: checkout [lshvec-upcxx](https://github.com/bochen0909/lshvec-upcxx) which is a pure c++ implementation.
+
 ## Summary
 
 LSHVec is a k-mer/sequence embedding/classfication software which extends [FastText](https://fasttext.cc/) . It applies LSH (Locality Sensitive Hashing) to reduce the size of k-mer vocabulary and improve the performance of embedding.
